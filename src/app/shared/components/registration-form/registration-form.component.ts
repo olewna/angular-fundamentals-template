@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 import { EmailValidatorDirective } from "@app/shared/directives/email.directive";
 
 @Component({
@@ -8,6 +9,7 @@ import { EmailValidatorDirective } from "@app/shared/directives/email.directive"
   styleUrls: ["./registration-form.component.scss"],
 })
 export class RegistrationFormComponent implements OnInit {
+  constructor(private router: Router) {}
   registrationForm!: FormGroup;
   submitted: boolean = false;
   isVisible: boolean = false;
@@ -33,8 +35,8 @@ export class RegistrationFormComponent implements OnInit {
   }
 
   goToLogin() {
-    console.log("go to login");
-    // this.router.navigate([''])
+    // console.log("go to login");
+    this.router.navigate(["login"]);
   }
   // Use the names `name`, `email`, `password` for the form controls.
 }

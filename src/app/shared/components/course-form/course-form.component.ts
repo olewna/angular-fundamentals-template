@@ -51,7 +51,7 @@ export class CourseFormComponent implements OnInit {
     } else {
       this.getAuthors().push(
         this.fb.group({
-          author: [this.courseForm.controls["author"].value],
+          name: [this.courseForm.controls["author"].value],
           id: [uuidv4()],
         })
       );

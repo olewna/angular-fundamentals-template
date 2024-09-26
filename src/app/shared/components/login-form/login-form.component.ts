@@ -1,5 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-login-form",
@@ -7,6 +8,7 @@ import { NgForm } from "@angular/forms";
   styleUrls: ["./login-form.component.scss"],
 })
 export class LoginFormComponent {
+  constructor(private router: Router) {}
   @ViewChild("loginForm") public loginForm!: NgForm;
 
   isVisible: boolean = false;
@@ -18,8 +20,8 @@ export class LoginFormComponent {
   }
 
   goToRegistration() {
-    console.log("go to registration");
-    // this.router.navigate([''])
+    // console.log("go to registration");
+    this.router.navigate(["registration"]);
   }
 
   changeVisibility() {
