@@ -1,2 +1,10 @@
-<app-search [placeholder]="'search'" (search)="logSomething($event)"></app-search>
-<app-courses-list [editable]="true" [courses]="posts"></app-courses-list>
+
+<div class="search-bar">
+    <app-search [placeholder]="'search'"></app-search>
+</div>
+
+<app-courses-list *ngIf="posts" [editable]="true" [courses]="posts"></app-courses-list>
+
+<app-info *ngIf="!posts && isAdmin" [text]="'Please use &#8217;Add New Course&#8217; button to add your first course'" [title]="'Your List Is Empty'">
+    <app-button [buttonText]="'add new course'" (parentFunction)="goToAddForm()"></app-button>
+</app-info>

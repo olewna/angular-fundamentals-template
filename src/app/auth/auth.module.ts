@@ -7,10 +7,6 @@ import { HttpClientModule } from "@angular/common/http";
 @NgModule({
   declarations: [],
   imports: [CommonModule, HttpClientModule],
-  providers: [
-    SessionStorageService,
-    AuthService,
-    [{ provide: "Window", useValue: Window }],
-  ],
+  providers: [SessionStorageService, AuthService],
 })
 export class AuthModule {}

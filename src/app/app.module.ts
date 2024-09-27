@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { InjectionToken, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { SharedModule } from "@shared/shared.module";
@@ -17,6 +17,17 @@ import { CoursesModule } from "./features/courses/courses.module";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { TokenInterceptor } from "./auth/interceptors/token.interceptor";
 import { AuthModule } from "./auth/auth.module";
+
+export const WINDOW = new InjectionToken<Window>("WindowToken");
+
+export function windowFactory(): Window {
+  return window;
+}
+
+export const windowProvider = {
+  provide: WINDOW,
+  useFactory: windowFactory,
+};
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,6 +52,7 @@ import { AuthModule } from "./auth/auth.module";
       useClass: TokenInterceptor,
       multi: true,
     },
+    windowProvider,
   ],
   bootstrap: [AppComponent],
 })

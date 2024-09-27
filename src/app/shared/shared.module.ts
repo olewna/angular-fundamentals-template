@@ -15,6 +15,7 @@ import { DurationPipe } from "./pipes/duration.pipe";
 import { CustomDatePipe } from "./pipes/custom-date.pipe";
 import { EmailValidatorDirective } from "@shared/directives/email.directive";
 import { TogglePasswordDirective } from "./directives/toggle-password.directive";
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 const components = [
   HeaderComponent,
@@ -31,7 +32,7 @@ const components = [
 ];
 
 @NgModule({
-  declarations: [components],
+  declarations: [components, PageNotFoundComponent],
   imports: [CommonModule, FontAwesomeModule, FormsModule, ReactiveFormsModule],
   exports: [components],
 })

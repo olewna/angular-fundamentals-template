@@ -1,6 +1,7 @@
 import { RouterModule, Routes } from "@angular/router";
 import { NgModule } from "@angular/core";
 import { AuthorizedGuard } from "./auth/guards/authorized.guard";
+import { PageNotFoundComponent } from "./shared/components/page-not-found/page-not-found.component";
 
 export const routes: Routes = [
   {
@@ -22,6 +23,10 @@ export const routes: Routes = [
       import("./shared/components/registration-form/registration.module").then(
         (m) => m.RegistrationModule
       ),
+  },
+  {
+    path: "**",
+    component: PageNotFoundComponent,
   },
 ];
 

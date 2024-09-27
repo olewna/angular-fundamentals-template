@@ -1,14 +1,11 @@
-import { Component, OnInit } from "@angular/core";
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
+import { Location } from "@angular/common";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { CoursesStoreService } from "@app/services/courses-store.service";
+import { Author } from "@app/shared/models/author.model";
 import { FaIconLibrary } from "@fortawesome/angular-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
-import { v4 as uuidv4 } from "uuid";
 
 @Component({
   selector: "app-course-form",
@@ -16,11 +13,20 @@ import { v4 as uuidv4 } from "uuid";
   styleUrls: ["./course-form.component.scss"],
 })
 export class CourseFormComponent implements OnInit {
-  constructor(public fb: FormBuilder, public library: FaIconLibrary) {
+  constructor(
+    public fb: FormBuilder,
+    public library: FaIconLibrary,
+    private route: ActivatedRoute,
+    private location: Location,
+    private coursesStoreService: CoursesStoreService,
+    private router: Router
+  ) {
     library.addIconPacks(fas);
   }
   courseForm!: FormGroup;
   protected submitted: boolean = false;
+  protected id: string = "";
+  private authors: Author[] = [];
 
   ngOnInit(): void {
     this.courseForm = this.fb.group({
@@ -34,6 +40,60 @@ export class CourseFormComponent implements OnInit {
       courseAuthors: this.fb.array([]),
       duration: ["", [Validators.required, Validators.min(0)]],
     });
+
+    this.coursesStoreService.getAllAuthors();
+    this.coursesStoreService.authors$.subscribe({
+      next: (authors) => {
+        this.authors = authors;
+      },
+    });
+
+    this.id = this.route.snapshot.params["id"];
+
+    this.getAuthors().clear();
+
+    this.authors.forEach((author) => {
+      this.getAuthors().push(this.fb.control(author));
+    });
+
+    if (this.id) {
+      this.coursesStoreService.getCourse(this.id);
+      this.coursesStoreService.courses$.subscribe({
+        next: (courses) => {
+          const currentCourse = courses[0];
+          this.courseForm.patchValue({
+            title: currentCourse.title,
+            description: currentCourse.description,
+            duration: currentCourse.duration,
+          });
+
+          this.getCourseAuthors().clear();
+
+          const courseAuthors = currentCourse.authors.map((authorId) => {
+            return {
+              name: this.authors.filter((x) => x.id === authorId)[0]?.name,
+              id: authorId,
+            };
+          });
+
+          this.authors = [
+            ...this.authors.filter(
+              (x) => !currentCourse.authors.includes(x.id)
+            ),
+          ];
+
+          this.getAuthors().clear();
+
+          this.authors.forEach((author) => {
+            this.getAuthors().push(this.fb.control(author));
+          });
+
+          courseAuthors.forEach((author) => {
+            this.getCourseAuthors().push(this.fb.control(author));
+          });
+        },
+      });
+    }
   }
 
   protected getAuthors(): FormArray {
@@ -47,14 +107,14 @@ export class CourseFormComponent implements OnInit {
   protected createNewAuthor(): void {
     if (this.courseForm.controls["author"].value === "") {
       alert("Do not add empty");
-      // TODO
     } else {
-      this.getAuthors().push(
-        this.fb.group({
-          name: [this.courseForm.controls["author"].value],
-          id: [uuidv4()],
-        })
-      );
+      this.coursesStoreService
+        .createAuthor(this.courseForm.get("author")?.value)
+        .subscribe({
+          next: (res) => {
+            this.getAuthors().push(this.fb.control(res.result));
+          },
+        });
 
       this.courseForm.controls["author"].setValue("");
     }
@@ -72,13 +132,39 @@ export class CourseFormComponent implements OnInit {
     this.getCourseAuthors().removeAt(id);
   }
 
-  protected deleteAuthor(id: number) {
-    this.getAuthors().removeAt(id);
+  protected deleteAuthor(i: number, id: string) {
+    this.getAuthors().removeAt(i);
+
+    this.coursesStoreService.deleteAuthor(id);
   }
 
   protected submit() {
-    console.log(this.courseForm);
+    // console.log(this.courseForm);
     this.submitted = true;
+
+    if (!this.courseForm.invalid) {
+      const body = {
+        title: this.courseForm.get("title")?.value,
+        description: this.courseForm.get("description")?.value,
+        duration: this.courseForm.get("duration")?.value,
+        authors: this.getCourseAuthors().value.map(
+          (x: Author) => x.id
+        ) as string[],
+      };
+
+      if (this.id) {
+        this.coursesStoreService.editCourse(this.id, body);
+      } else {
+        this.coursesStoreService.createCourse(body);
+        this.courseForm.reset();
+      }
+
+      alert(this.id ? "Updated" : "Course added"); //TODO
+      this.router.navigate(["courses"]);
+    }
   }
-  // Use the names `title`, `description`, `author`, 'authors' (for authors list), `duration` for the form controls.
+
+  goBack() {
+    this.location.back();
+  }
 }

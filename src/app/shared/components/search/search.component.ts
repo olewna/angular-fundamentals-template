@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { CoursesStoreService } from "@app/services/courses-store.service";
 
 @Component({
   selector: "app-search",
@@ -6,12 +7,16 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
   styleUrls: ["./search.component.scss"],
 })
 export class SearchComponent {
+  public constructor(private coursesStoreService: CoursesStoreService) {}
   @Input() placeholder = "";
-  @Output() search = new EventEmitter();
 
   protected searchedTerm: string = "";
 
   searched() {
-    this.search.emit(this.searchedTerm);
+    if (this.searchedTerm) {
+      this.coursesStoreService.filterCourses(this.searchedTerm);
+    } else {
+      this.coursesStoreService.getAll();
+    }
   }
 }

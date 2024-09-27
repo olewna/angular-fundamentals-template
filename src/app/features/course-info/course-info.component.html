@@ -7,8 +7,8 @@
   <div class="course-info__info">
     <div><b class="course-key">ID: </b><span class="course-info__info-id">{{course.id}}</span></div>
     <div><b class="course-key">Duration: </b><span class="course-info__info-duration">{{course.duration | duration}}</span></div>
-    <div><b class="course-key">Created: </b><span class="course-info__info-date">{{course.creationDate | customDate}}</span></div>
-    <div><b class="course-key">Authors: </b><span class="course-info__info-authors">{{course.authors}}</span></div>
+    <div><b class="course-key">Created: </b><span class="course-info__info-date">{{stringToDate | customDate}}</span></div>
+    <div><b class="course-key">Authors: </b><span class="course-info__info-authors">{{courseAuthors}}</span></div>
   </div>
 </div>
 <div class="navigation-block">

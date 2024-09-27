@@ -7,14 +7,14 @@
         <div class="course-card__info-text">
             <div>
               <b>Authors: </b>
-              {{course.authors}}
+              {{courseAuthors}}
             </div>
             <div><b>Duration: </b><span class="course-card__duration">{{ course.duration | duration}}</span></div>
-            <div><b>Created: </b><span class="course-card__date">{{course.creationDate | customDate}}</span></div>
+            <div><b>Created: </b><span class="course-card__date">{{ stringToDate | customDate}}</span></div>
         </div>
         <div class="course-card__info-actions">
-            <app-button [buttonText]="'show course'" [ngStyle]="{ 'width': '100%'}"></app-button>
-            <div class="course-card__buttons" *ngIf="editable">
+            <app-button [buttonText]="'show course'" (parentFunction)="goToInfoCourse()" [ngStyle]="{ 'width': '100%'}"></app-button>
+            <div class="course-card__buttons" *ngIf="editable && isAdmin">
                 <ng-content></ng-content>
             </div>
         </div>

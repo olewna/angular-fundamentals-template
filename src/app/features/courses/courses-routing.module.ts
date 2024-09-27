@@ -1,11 +1,9 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { CoursesComponent } from "./courses.component";
-import {
-  CourseCardComponent,
-  CourseFormComponent,
-} from "@app/shared/components";
-import { AuthorizedGuard } from "@app/auth/guards/authorized.guard";
+import { CourseFormComponent } from "@app/shared/components";
+import { AdminGuard } from "@app/user/guards/admin.guard";
+import { CourseInfoComponent } from "../course-info/course-info.component";
 
 const routes: Routes = [
   {
@@ -16,14 +14,16 @@ const routes: Routes = [
   {
     path: "add",
     component: CourseFormComponent,
+    canActivate: [AdminGuard],
   },
   {
     path: "edit/:id",
     component: CourseFormComponent,
+    canActivate: [AdminGuard],
   },
   {
     path: ":id",
-    component: CourseCardComponent,
+    component: CourseInfoComponent,
   },
 ];
 

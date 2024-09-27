@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+} from "@angular/core";
 import { FaIconLibrary } from "@fortawesome/angular-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 
@@ -18,10 +24,18 @@ export class ButtonComponent {
   @Input() reversed: boolean = false;
   @Input() width_max: boolean = false;
   @Input() font_size?: number;
+  @Input() form: boolean = false;
 
   @Output() parentFunction = new EventEmitter<void>();
 
   changeLoginStatus() {
     this.parentFunction.emit();
+  }
+
+  @HostListener("document:keydown.enter", ["$event"])
+  onEnterKeyPress(_event: KeyboardEvent) {
+    if (this.form) {
+      this.changeLoginStatus();
+    }
   }
 }
