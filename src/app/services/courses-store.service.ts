@@ -1,42 +1,184 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, catchError, finalize, tap } from "rxjs";
+import { CoursesService } from "./courses.service";
+import { Course, CourseForm } from "@app/shared/models/course.model";
+import { Author } from "@app/shared/models/author.model";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: "root",
 })
 export class CoursesStoreService {
-    getAll(){
-        // Add your code here
-    }
+  public constructor(private coursesService: CoursesService) {}
+  private isLoading$$ = new BehaviorSubject(false);
+  private courses$$ = new BehaviorSubject<Course[]>([]);
+  private authors$$ = new BehaviorSubject<Author[]>([]);
 
-    createCourse(course: any) { // replace 'any' with the required interface
-        // Add your code here
-    }
+  public isLoading$ = this.isLoading$$.asObservable();
+  public courses$ = this.courses$$.asObservable();
+  public authors$ = this.authors$$.asObservable();
 
-    getCourse(id: string) {
-        // Add your code here
-    }
+  getAll() {
+    this.isLoading$$.next(true);
 
-    editCourse(id: string, course: any) { // replace 'any' with the required interface
-        // Add your code here
-    }
+    this.coursesService
+      .getAll()
+      .pipe(
+        finalize(() => this.isLoading$$.next(false)),
+        catchError((error) => {
+          console.error("getAll ERROR", error);
+          return [];
+        })
+      )
+      .subscribe((res) => {
+        this.courses$$.next(res.result);
+      });
+  }
 
-    deleteCourse(id: string) {
-        // Add your code here
-    }
+  createCourse(course: CourseForm) {
+    this.isLoading$$.next(true);
 
-    filterCourses(value: string) {
-        // Add your code here
-    }
+    this.coursesService
+      .createCourse(course)
+      .pipe(
+        finalize(() => this.isLoading$$.next(false)),
+        catchError((error) => {
+          console.error("createCourse ERROR", error);
+          return [];
+        })
+      )
+      .subscribe((_res) => {
+        this.getAll();
+      });
+  }
 
-    getAllAuthors() {
-        // Add your code here
-    }
+  getCourse(id: string) {
+    this.isLoading$$.next(true);
 
-    createAuthor(name: string) {
-        // Add your code here
-    }
+    this.coursesService
+      .getCourse(id)
+      .pipe(
+        finalize(() => this.isLoading$$.next(false)),
+        catchError((error) => {
+          console.error("getCourse ERROR", error);
+          return [];
+        })
+      )
+      .subscribe((res) => {
+        this.courses$$.next([res.result]);
+      });
+  }
 
-    getAuthorById(id: string) {
-        // Add your code here
-    }
+  editCourse(id: string, course: CourseForm) {
+    this.isLoading$$.next(true);
+
+    this.coursesService
+      .editCourse(id, course)
+      .pipe(
+        finalize(() => this.isLoading$$.next(false)),
+        catchError((error) => {
+          console.log("EditCourse ERROR", error);
+          return [];
+        })
+      )
+      .subscribe((_res) => {
+        this.getAll();
+      });
+  }
+
+  deleteCourse(id: string) {
+    this.isLoading$$.next(true);
+
+    this.coursesService
+      .deleteCourse(id)
+      .pipe(
+        finalize(() => this.isLoading$$.next(false)),
+        catchError((error) => {
+          console.log("deleteCourse ERROR", error);
+          return [];
+        })
+      )
+      .subscribe((_res) => {
+        this.getAll();
+      });
+  }
+
+  filterCourses(value: string) {
+    this.isLoading$$.next(true);
+
+    this.coursesService
+      .filterCourses(value)
+      .pipe(
+        finalize(() => this.isLoading$$.next(false)),
+        catchError((error) => {
+          console.log("filterCourses ERROR", error);
+          return [];
+        })
+      )
+      .subscribe((res) => {
+        this.courses$$.next(res.result);
+      });
+  }
+
+  getAllAuthors() {
+    this.isLoading$$.next(true);
+
+    this.coursesService
+      .getAllAuthors()
+      .pipe(
+        finalize(() => this.isLoading$$.next(false)),
+        catchError((error) => {
+          console.log("getAllAuthors ERROR", error);
+          return [];
+        })
+      )
+      .subscribe((res) => {
+        this.authors$$.next(res.result);
+      });
+  }
+
+  createAuthor(name: string) {
+    this.isLoading$$.next(true);
+
+    return this.coursesService.createAuthor(name).pipe(
+      finalize(() => this.isLoading$$.next(false)),
+      catchError((error) => {
+        console.log("createAuthor ERROR", error);
+        return [];
+      })
+    );
+  }
+
+  getAuthorById(id: string) {
+    this.isLoading$$.next(true);
+
+    this.coursesService
+      .getAuthorById(id)
+      .pipe(
+        finalize(() => this.isLoading$$.next(false)),
+        catchError((error) => {
+          console.log("getAuthorById ERROR", error);
+          return [];
+        })
+      )
+      .subscribe((res) => {
+        this.authors$$.next([res.result]);
+      });
+  }
+
+  deleteAuthor(id: string) {
+    this.isLoading$$.next(true);
+
+    this.coursesService
+      .deleteAuthor(id)
+      .pipe(
+        finalize(() => this.isLoading$$.next(false)),
+        catchError((error) => {
+          console.log("deleteAuthor ERROR", error);
+          return [];
+        })
+      )
+      .subscribe((_res) => {
+        this.getAllAuthors();
+      });
+  }
 }

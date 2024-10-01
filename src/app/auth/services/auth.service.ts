@@ -1,30 +1,86 @@
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, catchError, Observable, tap } from "rxjs";
+import { SessionStorageService } from "./session-storage.service";
+import { User } from "@app/shared/models/user.model";
+import { environment } from "src/environments/environment";
+import { Router } from "@angular/router";
+import { UserStoreService } from "@app/user/services/user-store.service";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: "root",
 })
 export class AuthService {
-    login(user: any) { // replace 'any' with the required interface
-        // Add your code here
-    }
+  public constructor(
+    private httpClient: HttpClient,
+    private sessionStorageService: SessionStorageService,
+    private router: Router,
+    private userStoreService: UserStoreService
+  ) {}
+  public isAuthorized$ = new Observable();
+  private isAuthorized$$ = new BehaviorSubject(false);
+  private baseUrl = environment.apiUrl;
 
-    logout() {
-        // Add your code here
-    }
+  login(user: User) {
+    this.httpClient
+      .post<any>(`${this.baseUrl}/login`, user)
+      .pipe(
+        tap((response) => {
+          if (response && response.result) {
+            this.sessionStorageService.setToken(response.result.slice(7));
+          }
+        })
+      )
+      .subscribe({
+        next: (_res) => {
+          this.isAuthorized$$.next(true);
+          this.userStoreService.getUser();
+          this.router.navigate(["/courses"]);
+        },
+      });
+  }
 
-    register(user: any) { // replace 'any' with the required interface
-        // Add your code here
-    }
+  logout() {
+    const httpHeaders = new HttpHeaders().set(
+      "Authorization",
+      this.sessionStorageService.getToken() || ""
+    );
+    this.httpClient
+      .delete<any>(`${this.baseUrl}/logout`, {
+        headers: httpHeaders,
+      })
+      .pipe(
+        tap((response) => {
+          if (response && response.status === 200) {
+            this.sessionStorageService.deleteToken();
+          }
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.isAuthorized$$.next(false);
+          this.router.navigate(["/login"]);
+        },
+      });
+  }
 
-    get isAuthorised() {
-        // Add your code here. Get isAuthorized$$ value
-    }
+  register(user: User) {
+    this.httpClient.post<any>(`${this.baseUrl}/register`, user).subscribe({
+      next: () => {
+        this.router.navigate(["/login"]);
+      },
+    });
+  }
 
-    set isAuthorised(value: boolean) {
-        // Add your code here. Change isAuthorized$$ value
-    }
+  get isAuthorised() {
+    return this.isAuthorized$$.getValue();
+  }
 
-    getLoginUrl() {
-        // Add your code here
-    }
+  set isAuthorised(value: boolean) {
+    this.isAuthorized$$.next(value);
+  }
+
+  getLoginUrl() {
+    // Add your code here
+  }
 }

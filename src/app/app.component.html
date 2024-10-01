@@ -1,22 +1,20 @@
-<app-header></app-header>
+<app-header>
+  <div class="header-right" *ngIf="loginStatus">
+    <div class="user-name">{{username | uppercase}}</div>
+    <app-button
+      [buttonText]="'logout'"
+      (parentFunction)="logout()"
+    ></app-button>
+  </div>
+  <div class="header-right" *ngIf="!loginStatus">
+    <app-button
+      [buttonText]="'login'"
+      (parentFunction)="goToLogin()"
+    ></app-button>
+  </div>
+</app-header>
 <div class="app-root">
-  <!-- Search component -->
-  <!--<app-search></app-search>-->
-
-  <!-- Info component -->
-  <!--<app-info></app-info>-->
-
-  <!-- Course Card component -->
-  <!--<app-course-card></app-course-card>-->
-
-  <!-- Login Form component -->
-  <!--<app-login-form></app-login-form>-->
-
-  <!-- Login Form component -->
-  <!--<app-registration-form></app-registration-form>-->
-
-  <!-- Login Form component -->
-  <!--<app-course-form></app-course-form>-->
+  <router-outlet></router-outlet>
 
   <!-- Modal component -->
   <!-- <app-modal [message]="'Message'" [title]="'Title'" [okButtonText]="'Ok'" [cancelButtonText]="'Cancel'"></app-modal> -->

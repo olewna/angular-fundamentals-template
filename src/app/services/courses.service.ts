@@ -1,42 +1,57 @@
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { CourseForm } from "@app/shared/models/course.model";
+import { environment } from "src/environments/environment";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: "root",
 })
 export class CoursesService {
-    getAll() {
-        // Add your code here
-    }
+  public constructor(private httpClient: HttpClient) {}
+  private baseUrl = environment.apiUrl;
 
-    createCourse(course: any) { // replace 'any' with the required interface
-        // Add your code here
-    }
+  getAll() {
+    return this.httpClient.get<any>(`${this.baseUrl}/courses/all`);
+  }
 
-    editCourse(id: string, course: any) { // replace 'any' with the required interface
-        // Add your code here
-    }
+  createCourse(course: CourseForm) {
+    return this.httpClient.post<any>(`${this.baseUrl}/courses/add`, course);
+  }
 
-    getCourse(id: string) {
-        // Add your code here
-    }
+  editCourse(id: string, course: CourseForm) {
+    return this.httpClient.put<any>(`${this.baseUrl}/courses/${id}`, course);
+  }
 
-    deleteCourse(id: string) {
-        // Add your code here
-    }
+  getCourse(id: string) {
+    return this.httpClient.get<any>(`${this.baseUrl}/courses/${id}`);
+  }
 
-    filterCourses(value: string) {
-        // Add your code here
-    }
+  deleteCourse(id: string) {
+    return this.httpClient.delete<any>(`${this.baseUrl}/courses/${id}`);
+  }
 
-    getAllAuthors() {
-        // Add your code here
-    }
+  filterCourses(value: string) {
+    const params = new HttpParams().set("title", value);
+    return this.httpClient.get<any>(`${this.baseUrl}/courses/filter`, {
+      params: params,
+    });
+  }
 
-    createAuthor(name: string) {
-        // Add your code here
-    }
+  getAllAuthors() {
+    return this.httpClient.get<any>(`${this.baseUrl}/authors/all`);
+  }
 
-    getAuthorById(id: string) {
-        // Add your code here
-    }
+  createAuthor(name: string) {
+    return this.httpClient.post<any>(`${this.baseUrl}/authors/add`, {
+      name,
+    });
+  }
+
+  getAuthorById(id: string) {
+    return this.httpClient.get<any>(`${this.baseUrl}/authors/${id}`);
+  }
+
+  deleteAuthor(id: string) {
+    return this.httpClient.delete<any>(`${this.baseUrl}/authors/${id}`);
+  }
 }
