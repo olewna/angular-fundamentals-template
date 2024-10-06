@@ -13,19 +13,17 @@ export class LoginFormComponent {
   constructor(private router: Router, private authService: AuthService) {}
   @ViewChild("loginForm") public loginForm!: NgForm;
 
-  isVisible: boolean = false;
-  protected submitted: boolean = false;
+  public isVisible = false;
+  protected submitted = false;
 
   submitLogin(form: NgForm) {
     this.submitted = true;
     if (!form.invalid) {
-      // console.log(form.value);
       this.authService.login(form.value);
     }
   }
 
   goToRegistration() {
-    // console.log("go to registration");
     this.router.navigate(["registration"]);
   }
 

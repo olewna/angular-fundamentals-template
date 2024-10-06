@@ -10,9 +10,9 @@ import { EmailValidatorDirective } from "@app/shared/directives/email.directive"
 })
 export class RegistrationFormComponent implements OnInit {
   constructor(private router: Router) {}
-  registrationForm!: FormGroup;
-  submitted: boolean = false;
-  isVisible: boolean = false;
+  protected registrationForm!: FormGroup;
+  protected submitted = false;
+  protected isVisible = false;
 
   ngOnInit(): void {
     this.registrationForm = new FormGroup({
@@ -35,8 +35,6 @@ export class RegistrationFormComponent implements OnInit {
   }
 
   goToLogin() {
-    // console.log("go to login");
     this.router.navigate(["login"]);
   }
-  // Use the names `name`, `email`, `password` for the form controls.
 }

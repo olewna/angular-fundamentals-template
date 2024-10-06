@@ -10,7 +10,7 @@ export class SearchComponent {
   public constructor(private coursesStoreService: CoursesStoreService) {}
   @Input() placeholder = "";
 
-  protected searchedTerm: string = "";
+  protected searchedTerm = "";
 
   searched() {
     if (this.searchedTerm) {

@@ -15,7 +15,7 @@ export class CourseCardComponent {
     private userStoreService: UserStoreService,
     private router: Router
   ) {}
-  @Input() course: Course | null = null;
+  @Input() course: Course | undefined;
   @Input() editable: boolean = false;
   @Input() authors: Author[] = [];
 

@@ -19,11 +19,11 @@ export class ButtonComponent {
   }
 
   // Use the names for the inputs `buttonText` and `iconName`.
-  @Input() buttonText?: string;
-  @Input() iconName?: any;
+  @Input() buttonText: string | undefined;
+  @Input() iconName: any;
   @Input() reversed: boolean = false;
   @Input() width_max: boolean = false;
-  @Input() font_size?: number;
+  @Input() font_size: number | undefined;
   @Input() form: boolean = false;
 
   @Output() parentFunction = new EventEmitter<void>();

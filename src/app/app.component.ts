@@ -9,8 +9,8 @@ import { AuthService } from "./auth/services/auth.service";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
-  title = "courses-app";
-  protected username: string = "";
+  public title = "courses-app";
+  protected username = "";
 
   public constructor(
     private userStoreService: UserStoreService,

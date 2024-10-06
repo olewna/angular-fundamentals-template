@@ -23,9 +23,10 @@ export class CourseFormComponent implements OnInit {
   ) {
     library.addIconPacks(fas);
   }
-  courseForm!: FormGroup;
-  protected submitted: boolean = false;
-  protected id: string = "";
+
+  protected courseForm!: FormGroup;
+  protected submitted = false;
+  protected id = "";
   private authors: Author[] = [];
 
   ngOnInit(): void {

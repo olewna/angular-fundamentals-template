@@ -75,10 +75,7 @@ export class CoursesEffects {
       ofType(requestDeleteCourse),
       mergeMap((action) =>
         this.coursesService.deleteCourse(action.id).pipe(
-          map(() => {
-            requestAllCourses();
-            requestDeleteCourseSuccess();
-          }),
+          mergeMap(() => [requestAllCourses(), requestDeleteCourseSuccess()]),
           catchError((error) => of(requestDeleteCourseFail({ error })))
         )
       )

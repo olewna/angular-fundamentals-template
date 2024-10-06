@@ -20,7 +20,7 @@ export class CourseInfoComponent implements OnInit {
 
   @Input() course: Course | null = null;
 
-  private id: string = "";
+  private id = "";
   private authors: Author[] = [];
 
   ngOnInit(): void {

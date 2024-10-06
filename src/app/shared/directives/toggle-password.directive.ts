@@ -5,7 +5,7 @@ import { Directive, ElementRef, HostListener, Input } from "@angular/core";
   exportAs: "togglePassword",
 })
 export class TogglePasswordDirective {
-  private isVisible: boolean = false;
+  private isVisible = false;
 
   constructor(private el: ElementRef) {}
 
