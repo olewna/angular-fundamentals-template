@@ -3,6 +3,7 @@ import { Course } from "@app/shared/models/course.model";
 import { CoursesStoreService } from "../../services/courses-store.service";
 import { Router } from "@angular/router";
 import { UserStoreService } from "../../user/services/user-store.service";
+import { CoursesStateFacade } from "@app/store/courses/courses.facade";
 
 @Component({
   selector: "app-courses",
@@ -12,24 +13,28 @@ import { UserStoreService } from "../../user/services/user-store.service";
 export class CoursesComponent implements OnInit {
   constructor(
     private courseStoreService: CoursesStoreService,
+    private courseFacade: CoursesStateFacade,
     private userStoreService: UserStoreService,
     private router: Router
   ) {}
+
+  public courses: Course[] = [];
+  protected courses$ = this.courseFacade.allCourses$;
+  protected isLoading$ = this.courseFacade.isAllCoursesLoading$;
 
   get isAdmin() {
     return this.userStoreService.isAdmin;
   }
 
   ngOnInit(): void {
-    this.courseStoreService.getAll();
-    this.courseStoreService.courses$.subscribe({
+    this.courseFacade.getAllCourses();
+
+    this.courseFacade.allCourses$.subscribe({
       next: (res) => {
-        this.posts = res;
+        this.courses = res;
       },
     });
   }
-
-  public posts: Course[] = [];
 
   goToAddForm() {
     this.router.navigate(["courses", "add"]);

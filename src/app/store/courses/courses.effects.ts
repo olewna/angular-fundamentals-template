@@ -15,6 +15,7 @@ import {
   requestEditCourseFail,
   requestEditCourseSuccess,
   requestFilteredCourses,
+  requestFilteredCoursesFail,
   requestFilteredCoursesSuccess,
   requestSingleCourse,
   requestSingleCourseFail,
@@ -38,25 +39,28 @@ export class CoursesEffects {
       ofType(requestAllCourses),
       mergeMap(() =>
         this.coursesService.getAll().pipe(
-          map((data) => requestAllCoursesSuccess({ courses: data.result })),
+          map((data) => {
+            return requestAllCoursesSuccess({ courses: data.result });
+          }),
           catchError((error) => of(requestAllCoursesFail({ error })))
         )
       )
     )
   );
 
-  // filteredCourses$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(requestFilteredCourses),
-  //     withLatestFrom(this.facade.allCourses$),
-  //     map(([action, allCourses]) => {
-  //       const filteredCourses = allCourses.filter(course =>
-  //         course.title.toLowerCase().includes(action.title.toLowerCase())
-  //       );
-  //       return requestFilteredCoursesSuccess({ courses: filteredCourses });
-  //     })
-  //   )
-  // );
+  filteredCourses$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(requestFilteredCourses),
+      withLatestFrom(this.facade.allCourses$),
+      map(([action, allCourses]) => {
+        const filteredCourses = allCourses.filter((course) =>
+          course.title.toLowerCase().includes(action.title.toLowerCase())
+        );
+        return requestFilteredCoursesSuccess({ courses: filteredCourses });
+      }),
+      catchError((error) => of(requestFilteredCoursesFail({ error })))
+    )
+  );
 
   getSpecificCourse$ = createEffect(() =>
     this.actions$.pipe(

@@ -19,10 +19,10 @@ export const isSingleCourseLoadingSelector = createSelector(
   (state: CoursesState) => state.isSingleCourseLoading
 );
 
-// export const getCourses = createSelector(
-//   selectCourses,
-//   (state: CoursesState) => state.allCourses
-// );
+export const getCourses = createSelector(
+  selectCourses,
+  (state: CoursesState) => state.allCourses
+);
 
 export const getAllCourses = createSelector(
   selectCourses,

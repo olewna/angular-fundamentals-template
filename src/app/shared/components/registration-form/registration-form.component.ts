@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { AuthService } from "@app/auth/services/auth.service";
 import { EmailValidatorDirective } from "@app/shared/directives/email.directive";
 
 @Component({
@@ -9,7 +10,7 @@ import { EmailValidatorDirective } from "@app/shared/directives/email.directive"
   styleUrls: ["./registration-form.component.scss"],
 })
 export class RegistrationFormComponent implements OnInit {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
   protected registrationForm!: FormGroup;
   protected submitted = false;
   protected isVisible = false;
@@ -26,8 +27,9 @@ export class RegistrationFormComponent implements OnInit {
   }
 
   submitRegistration() {
-    console.log(this.registrationForm);
+    this.authService.register(this.registrationForm.value);
     this.submitted = true;
+    this.goToLogin();
   }
 
   changeVisibility() {

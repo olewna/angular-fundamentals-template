@@ -3,7 +3,7 @@ import { select, Store } from "@ngrx/store";
 import * as fromCourses from "./courses.selectors";
 import * as courseActions from "./courses.actions";
 import { AppState } from "..";
-import { Course } from "@app/shared/models/course.model";
+import { Course, CourseForm } from "@app/shared/models/course.model";
 
 @Injectable({
   providedIn: "root",
@@ -20,7 +20,7 @@ export class CoursesStateFacade {
   public isSearchingState$ = this.store.pipe(
     select(fromCourses.isSearchingStateSelector)
   );
-  //   public courses$ = this.store.pipe(select(fromCourses.getAllCourses))
+  public courses$ = this.store.pipe(select(fromCourses.getCourses));
   public allCourses$ = this.store.pipe(select(fromCourses.getAllCourses));
   public course$ = this.store.pipe(select(fromCourses.getCourse));
   public errorMessage$ = this.store.pipe(select(fromCourses.getErrorMessage));
@@ -39,11 +39,11 @@ export class CoursesStateFacade {
     );
   }
 
-  public editCourse(body: Course, id: string): void {
+  public editCourse(body: CourseForm, id: string): void {
     this.store.dispatch(courseActions.requestEditCourse({ id, course: body }));
   }
 
-  public createCourse(body: Course): void {
+  public createCourse(body: CourseForm): void {
     this.store.dispatch(courseActions.requestCreateCourse({ course: body }));
   }
 

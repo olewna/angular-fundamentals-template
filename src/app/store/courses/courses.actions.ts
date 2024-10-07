@@ -1,6 +1,6 @@
 import { createAction, props } from "@ngrx/store";
 import { CoursesConstants } from "@app/store/courses/courses.constants";
-import { Course } from "../../shared/models/course.model";
+import { Course, CourseForm } from "../../shared/models/course.model";
 
 export const requestAllCourses = createAction(
   CoursesConstants.REQUEST_ALL_COURSES
@@ -62,7 +62,7 @@ export const requestDeleteCourseFail = createAction(
 
 export const requestEditCourse = createAction(
   CoursesConstants.REQUEST_EDIT_COURSE,
-  props<{ id: string; course: Course }>()
+  props<{ id: string; course: CourseForm }>()
 );
 
 export const requestEditCourseSuccess = createAction(
@@ -77,7 +77,7 @@ export const requestEditCourseFail = createAction(
 
 export const requestCreateCourse = createAction(
   CoursesConstants.REQUEST_CREATE_COURSE,
-  props<{ course: Course }>()
+  props<{ course: CourseForm }>()
 );
 
 export const requestCreateCourseSuccess = createAction(

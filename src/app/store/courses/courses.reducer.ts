@@ -52,7 +52,7 @@ export const coursesReducer = createReducer(
   on(requestAllCoursesSuccess, (state, { courses }) => ({
     ...state,
     isAllCoursesLoading: false,
-    courses: [...courses],
+    allCourses: courses,
   })),
   on(requestAllCoursesFail, (state, { error }) => ({
     ...state,
