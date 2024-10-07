@@ -26,10 +26,10 @@ export class ButtonComponent {
   @Input() font_size: number | undefined;
   @Input() form: boolean = false;
 
-  @Output() parentFunction = new EventEmitter<void>();
+  @Output() buttonOnClick = new EventEmitter<void>();
 
   changeLoginStatus() {
-    this.parentFunction.emit();
+    this.buttonOnClick.emit();
   }
 
   @HostListener("document:keydown.enter", ["$event"])

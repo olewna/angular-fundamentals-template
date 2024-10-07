@@ -10,6 +10,7 @@ import { catchError, Observable, throwError } from "rxjs";
 import { SessionStorageService } from "../services/session-storage.service";
 import { AuthService } from "../services/auth.service";
 import { Router } from "@angular/router";
+import { AuthFacade } from "@app/store/auth/auth.facade";
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -28,7 +29,7 @@ export class TokenInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          inject(AuthService).logout();
+          inject(AuthFacade).logout();
           inject(Router).parseUrl("/login");
         }
 

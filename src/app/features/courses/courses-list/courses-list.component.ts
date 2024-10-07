@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { CoursesStoreService } from "@app/services/courses-store.service";
 import { Author } from "@app/shared/models/author.model";
 import { Course } from "@app/shared/models/course.model";
+import { UserFacade } from "@app/store/user/user.facade";
 import { UserStoreService } from "@app/user/services/user-store.service";
 
 @Component({
@@ -13,13 +14,13 @@ import { UserStoreService } from "@app/user/services/user-store.service";
 export class CoursesListComponent implements OnInit {
   public constructor(
     private coursesStoreService: CoursesStoreService,
-    private userStoreService: UserStoreService,
+    private userFacade: UserFacade,
     private router: Router
   ) {}
   protected authors: Author[] = [];
 
   get isAdmin() {
-    return this.userStoreService.isAdmin;
+    return this.userFacade.isAdmin;
   }
 
   ngOnInit(): void {

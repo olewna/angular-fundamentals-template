@@ -3,13 +3,13 @@
     <div class="user-name">{{username | uppercase}}</div>
     <app-button
       [buttonText]="'logout'"
-      (parentFunction)="logout()"
+      (buttonOnClick)="logout()"
     ></app-button>
   </div>
   <div class="header-right" *ngIf="!loginStatus">
     <app-button
       [buttonText]="'login'"
-      (parentFunction)="goToLogin()"
+      (buttonOnClick)="goToLogin()"
     ></app-button>
   </div>
 </app-header>

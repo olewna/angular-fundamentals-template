@@ -1,26 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { CoursesService } from "@app/services/courses.service";
-import {
-  requestAllCourses,
-  requestAllCoursesFail,
-  requestAllCoursesSuccess,
-  requestCreateCourse,
-  requestCreateCourseFail,
-  requestCreateCourseSuccess,
-  requestDeleteCourse,
-  requestDeleteCourseFail,
-  requestDeleteCourseSuccess,
-  requestEditCourse,
-  requestEditCourseFail,
-  requestEditCourseSuccess,
-  requestFilteredCourses,
-  requestFilteredCoursesFail,
-  requestFilteredCoursesSuccess,
-  requestSingleCourse,
-  requestSingleCourseFail,
-  requestSingleCourseSuccess,
-} from "./courses.actions";
+import * as CoursesActions from "./courses.actions";
 import { catchError, map, mergeMap, of, withLatestFrom } from "rxjs";
 import { CoursesStateFacade } from "./courses.facade";
 import { Router } from "@angular/router";
@@ -36,13 +17,17 @@ export class CoursesEffects {
 
   getAll$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(requestAllCourses),
+      ofType(CoursesActions.requestAllCourses),
       mergeMap(() =>
         this.coursesService.getAll().pipe(
           map((data) => {
-            return requestAllCoursesSuccess({ courses: data.result });
+            return CoursesActions.requestAllCoursesSuccess({
+              courses: data.result,
+            });
           }),
-          catchError((error) => of(requestAllCoursesFail({ error })))
+          catchError((error) =>
+            of(CoursesActions.requestAllCoursesFail({ error }))
+          )
         )
       )
     )
@@ -50,25 +35,33 @@ export class CoursesEffects {
 
   filteredCourses$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(requestFilteredCourses),
+      ofType(CoursesActions.requestFilteredCourses),
       withLatestFrom(this.facade.allCourses$),
       map(([action, allCourses]) => {
         const filteredCourses = allCourses.filter((course) =>
           course.title.toLowerCase().includes(action.title.toLowerCase())
         );
-        return requestFilteredCoursesSuccess({ courses: filteredCourses });
+        return CoursesActions.requestFilteredCoursesSuccess({
+          courses: filteredCourses,
+        });
       }),
-      catchError((error) => of(requestFilteredCoursesFail({ error })))
+      catchError((error) =>
+        of(CoursesActions.requestFilteredCoursesFail({ error }))
+      )
     )
   );
 
   getSpecificCourse$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(requestSingleCourse),
+      ofType(CoursesActions.requestSingleCourse),
       mergeMap((action) =>
         this.coursesService.getCourse(action.id).pipe(
-          map((data) => requestSingleCourseSuccess({ course: data.result })),
-          catchError((error) => of(requestSingleCourseFail({ error })))
+          map((data) =>
+            CoursesActions.requestSingleCourseSuccess({ course: data.result })
+          ),
+          catchError((error) =>
+            of(CoursesActions.requestSingleCourseFail({ error }))
+          )
         )
       )
     )
@@ -76,11 +69,16 @@ export class CoursesEffects {
 
   deleteCourse$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(requestDeleteCourse),
+      ofType(CoursesActions.requestDeleteCourse),
       mergeMap((action) =>
         this.coursesService.deleteCourse(action.id).pipe(
-          mergeMap(() => [requestAllCourses(), requestDeleteCourseSuccess()]),
-          catchError((error) => of(requestDeleteCourseFail({ error })))
+          mergeMap(() => [
+            CoursesActions.requestAllCourses(),
+            CoursesActions.requestDeleteCourseSuccess(),
+          ]),
+          catchError((error) =>
+            of(CoursesActions.requestDeleteCourseFail({ error }))
+          )
         )
       )
     )
@@ -88,11 +86,15 @@ export class CoursesEffects {
 
   editCourse$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(requestEditCourse),
+      ofType(CoursesActions.requestEditCourse),
       mergeMap((action) =>
         this.coursesService.editCourse(action.id, action.course).pipe(
-          map((data) => requestEditCourseSuccess({ course: data.result })),
-          catchError((error) => of(requestEditCourseFail({ error })))
+          map((data) =>
+            CoursesActions.requestEditCourseSuccess({ course: data.result })
+          ),
+          catchError((error) =>
+            of(CoursesActions.requestEditCourseFail({ error }))
+          )
         )
       )
     )
@@ -100,11 +102,15 @@ export class CoursesEffects {
 
   createCourse$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(requestCreateCourse),
+      ofType(CoursesActions.requestCreateCourse),
       mergeMap((action) =>
         this.coursesService.createCourse(action.course).pipe(
-          map((data) => requestCreateCourseSuccess({ course: data.result })),
-          catchError((error) => of(requestCreateCourseFail({ error })))
+          map((data) =>
+            CoursesActions.requestCreateCourseSuccess({ course: data.result })
+          ),
+          catchError((error) =>
+            of(CoursesActions.requestCreateCourseFail({ error }))
+          )
         )
       )
     )
@@ -114,9 +120,9 @@ export class CoursesEffects {
     () =>
       this.actions$.pipe(
         ofType(
-          requestCreateCourseSuccess,
-          requestEditCourseSuccess,
-          requestSingleCourseFail
+          CoursesActions.requestCreateCourseSuccess,
+          CoursesActions.requestEditCourseSuccess,
+          CoursesActions.requestSingleCourseFail
         ),
         map(() => this.router.navigate(["courses"]))
       ),

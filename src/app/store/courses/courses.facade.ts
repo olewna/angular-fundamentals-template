@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { select, Store } from "@ngrx/store";
 import * as fromCourses from "./courses.selectors";
-import * as courseActions from "./courses.actions";
+import * as CourseActions from "./courses.actions";
 import { AppState } from "..";
 import { Course, CourseForm } from "@app/shared/models/course.model";
 
@@ -26,28 +26,28 @@ export class CoursesStateFacade {
   public errorMessage$ = this.store.pipe(select(fromCourses.getErrorMessage));
 
   public getAllCourses(): void {
-    this.store.dispatch(courseActions.requestAllCourses());
+    this.store.dispatch(CourseActions.requestAllCourses());
   }
 
   public getSingleCourse(id: string): void {
-    this.store.dispatch(courseActions.requestSingleCourse({ id }));
+    this.store.dispatch(CourseActions.requestSingleCourse({ id }));
   }
 
   public getFilteredCourses(searchValue: string): void {
     this.store.dispatch(
-      courseActions.requestFilteredCourses({ title: searchValue })
+      CourseActions.requestFilteredCourses({ title: searchValue })
     );
   }
 
   public editCourse(body: CourseForm, id: string): void {
-    this.store.dispatch(courseActions.requestEditCourse({ id, course: body }));
+    this.store.dispatch(CourseActions.requestEditCourse({ id, course: body }));
   }
 
   public createCourse(body: CourseForm): void {
-    this.store.dispatch(courseActions.requestCreateCourse({ course: body }));
+    this.store.dispatch(CourseActions.requestCreateCourse({ course: body }));
   }
 
   public deleteCourse(id: string): void {
-    this.store.dispatch(courseActions.requestDeleteCourse({ id }));
+    this.store.dispatch(CourseActions.requestDeleteCourse({ id }));
   }
 }

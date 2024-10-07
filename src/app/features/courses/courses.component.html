@@ -9,7 +9,7 @@
 
 <ng-template #noCourses>
     <app-info *ngIf="(courses$ | async)?.length === 0 && isAdmin" [text]="'Please use &#8217;Add New Course&#8217; button to add your first course'" [title]="'Your List Is Empty'">
-        <app-button [buttonText]="'add new course'" (parentFunction)="goToAddForm()"></app-button>
+        <app-button [buttonText]="'add new course'" (buttonOnClick)="goToAddForm()"></app-button>
     </app-info>
 </ng-template>
 

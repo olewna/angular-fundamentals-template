@@ -13,7 +13,7 @@
             <div><b>Created: </b><span class="course-card__date">{{ stringToDate | customDate}}</span></div>
         </div>
         <div class="course-card__info-actions">
-            <app-button [buttonText]="'show course'" (parentFunction)="goToInfoCourse()" [ngStyle]="{ 'width': '100%'}"></app-button>
+            <app-button [buttonText]="'show course'" (buttonOnClick)="goToInfoCourse()" [ngStyle]="{ 'width': '100%'}"></app-button>
             <div class="course-card__buttons" *ngIf="editable && isAdmin">
                 <ng-content></ng-content>
             </div>

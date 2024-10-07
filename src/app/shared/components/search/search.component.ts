@@ -8,10 +8,7 @@ import { CoursesStateFacade } from "@app/store/courses/courses.facade";
   styleUrls: ["./search.component.scss"],
 })
 export class SearchComponent {
-  public constructor(
-    private coursesStoreService: CoursesStoreService,
-    private coursesFacade: CoursesStateFacade
-  ) {}
+  public constructor(private coursesFacade: CoursesStateFacade) {}
   @Input() placeholder = "";
 
   protected searchedTerm = "";

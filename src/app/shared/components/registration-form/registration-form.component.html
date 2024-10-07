@@ -26,7 +26,7 @@
 
           <div class="password-input">
             <input [ngStyle]="{ 'border-color': ((passwordControl.invalid && passwordControl.touched) || (submitted && passwordControl.invalid) ? '#FF0000' : '#CFCFCF')}" type="password" id="password" formControlName="password" togglePassword #btn="togglePassword" placeholder="Input text"/>
-            <app-button class="toggle-icon" [iconName]="isVisible ? 'eye' : 'eye-slash'" [reversed]="true" [font_size]="15" (parentFunction)="btn.toggle()" (parentFunction)="changeVisibility()" ></app-button>
+            <app-button class="toggle-icon" [iconName]="isVisible ? 'eye' : 'eye-slash'" [reversed]="true" [font_size]="15" (buttonOnClick)="btn.toggle()" (buttonOnClick)="changeVisibility()" ></app-button>
           </div>
 
           <span *ngIf="(passwordControl.touched || submitted) && passwordControl.hasError('required')" id="passwordErrorMessage" class="text-danger">Password is required.</span>
@@ -36,7 +36,7 @@
       </div>
       <div>
         <div class="form__action">
-          <app-button type="submit" (parentFunction)="submitRegistration()" [buttonText]="'register'" [width_max]="true" [form]="true"></app-button>
+          <app-button type="submit" (buttonOnClick)="submitRegistration()" [buttonText]="'register'" [width_max]="true" [form]="true"></app-button>
         </div>
         <div class="form__text">
           If you have an account you may <strong class="login-link" (click)="goToLogin()">Login</strong>
