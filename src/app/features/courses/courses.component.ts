@@ -18,8 +18,9 @@ export class CoursesComponent implements OnInit {
     private router: Router
   ) {}
 
-  public courses: Course[] = [];
+  public isSearchingState = false;
   protected courses$ = this.courseFacade.allCourses$;
+  protected filteredCourses$ = this.courseFacade.filteredCourses$;
   protected isLoading$ = this.courseFacade.isAllCoursesLoading$;
 
   get isAdmin() {
@@ -29,9 +30,9 @@ export class CoursesComponent implements OnInit {
   ngOnInit(): void {
     this.courseFacade.getAllCourses();
 
-    this.courseFacade.allCourses$.subscribe({
-      next: (res) => {
-        this.courses = res;
+    this.courseFacade.isSearchingState$.subscribe({
+      next: (value) => {
+        this.isSearchingState = value;
       },
     });
   }

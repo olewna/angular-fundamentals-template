@@ -20,8 +20,11 @@ export class CoursesStateFacade {
   public isSearchingState$ = this.store.pipe(
     select(fromCourses.isSearchingStateSelector)
   );
-  public courses$ = this.store.pipe(select(fromCourses.getCourses));
+
   public allCourses$ = this.store.pipe(select(fromCourses.getAllCourses));
+  public filteredCourses$ = this.store.pipe(
+    select(fromCourses.getFilteredCourses)
+  );
   public course$ = this.store.pipe(select(fromCourses.getCourse));
   public errorMessage$ = this.store.pipe(select(fromCourses.getErrorMessage));
 

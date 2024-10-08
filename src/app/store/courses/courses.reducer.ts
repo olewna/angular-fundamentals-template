@@ -7,6 +7,7 @@ export const coursesFeatureKey = "courses";
 export interface CoursesState {
   allCourses: Course[];
   course: Course | null;
+  filteredCourses: Course[];
   isAllCoursesLoading: boolean;
   isSingleCourseLoading: boolean;
   isSearchState: boolean;
@@ -16,6 +17,7 @@ export interface CoursesState {
 export const initialState: CoursesState = {
   allCourses: [],
   course: null,
+  filteredCourses: [],
   isAllCoursesLoading: false,
   isSingleCourseLoading: false,
   isSearchState: false,
@@ -63,11 +65,12 @@ export const coursesReducer = createReducer(
     isAllCoursesLoading: true,
     isSearchState: true,
     errorMessage: null,
+    filteredCourses: [],
   })),
   on(CoursesActions.requestFilteredCoursesSuccess, (state, { courses }) => ({
     ...state,
     isAllCoursesLoading: false,
-    allCourses: [...courses],
+    filteredCourses: courses,
   })),
   on(CoursesActions.requestFilteredCoursesFail, (state, { error }) => ({
     ...state,

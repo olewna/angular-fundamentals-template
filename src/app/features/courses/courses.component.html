@@ -14,5 +14,5 @@
 </ng-template>
 
 <ng-template #courseList>
-    <app-courses-list *ngIf="(courses$ | async) as courses; else noCourses" [editable]="true" [courses]="courses"></app-courses-list>
+    <app-courses-list *ngIf="(!isSearchingState ? (courses$ | async) : (filteredCourses$ | async)) as courses; else noCourses" [editable]="true" [courses]="courses"></app-courses-list>
 </ng-template>
