@@ -1,8 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
-import { AuthService } from "@app/auth/services/auth.service";
-import { CoursesStoreService } from "@app/services/courses-store.service";
+import { AuthFacade } from "@app/store/auth/auth.facade";
 
 @Component({
   selector: "app-login-form",
@@ -10,22 +9,20 @@ import { CoursesStoreService } from "@app/services/courses-store.service";
   styleUrls: ["./login-form.component.scss"],
 })
 export class LoginFormComponent {
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authFacade: AuthFacade) {}
   @ViewChild("loginForm") public loginForm!: NgForm;
 
-  isVisible: boolean = false;
-  protected submitted: boolean = false;
+  public isVisible = false;
+  protected submitted = false;
 
   submitLogin(form: NgForm) {
     this.submitted = true;
     if (!form.invalid) {
-      // console.log(form.value);
-      this.authService.login(form.value);
+      this.authFacade.login(form.value);
     }
   }
 
   goToRegistration() {
-    // console.log("go to registration");
     this.router.navigate(["registration"]);
   }
 

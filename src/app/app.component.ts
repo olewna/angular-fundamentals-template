@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { UserStoreService } from "./user/services/user-store.service";
 import { Router } from "@angular/router";
 import { AuthService } from "./auth/services/auth.service";
+import { UserFacade } from "./store/user/user.facade";
+import { AuthFacade } from "./store/auth/auth.facade";
 
 @Component({
   selector: "app-root",
@@ -9,25 +11,25 @@ import { AuthService } from "./auth/services/auth.service";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
-  title = "courses-app";
-  protected username: string = "";
+  public title = "courses-app";
+  protected username = "";
 
   public constructor(
-    private userStoreService: UserStoreService,
+    private userFacade: UserFacade,
     private router: Router,
-    private authService: AuthService
+    private authFacade: AuthFacade
   ) {}
 
   ngOnInit(): void {
-    this.userStoreService.name$.subscribe({
+    this.userFacade.name$.subscribe({
       next: (res) => {
-        this.username = res;
+        this.username = res!;
       },
     });
   }
 
   get loginStatus(): boolean {
-    return this.authService.isAuthorised;
+    return this.authFacade.isAuthorized;
   }
 
   goToLogin() {
@@ -35,6 +37,6 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout();
+    this.authFacade.logout();
   }
 }

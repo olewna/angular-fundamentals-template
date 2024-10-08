@@ -19,7 +19,7 @@
 
           <div class="password-input">
             <input [ngStyle]="{ 'border-color': ((password.invalid && password.touched) || (submitted && password.invalid) ? '#FF0000' : '#CFCFCF')}" type="password" id="password" name="password" ngModel #password="ngModel" required minlength="8" placeholder="Input text" togglePassword #btn="togglePassword" />
-            <app-button class="toggle-icon" [iconName]="isVisible ? 'eye' : 'eye-slash'" [reversed]="true" [font_size]="15" (parentFunction)="btn.toggle()" (parentFunction)="changeVisibility()" ></app-button>
+            <app-button class="toggle-icon" [iconName]="isVisible ? 'eye' : 'eye-slash'" [reversed]="true" [font_size]="15" (buttonOnClick)="btn.toggle()" (buttonOnClick)="changeVisibility()" ></app-button>
           </div>
 
           <ng-container *ngIf="(password.invalid && password.touched) || (submitted && password.invalid)">
@@ -31,7 +31,7 @@
       </div>
       <div>
         <div class="form__action">
-          <app-button type="submit" [buttonText]="'login'" (parentFunction)="submitLogin(loginForm)" [width_max]="true" [form]="true"></app-button>
+          <app-button type="submit" [buttonText]="'login'" (buttonOnClick)="submitLogin(loginForm)" [width_max]="true" [form]="true"></app-button>
         </div>
         <div class="form__text">
           If you don't have an account you may <strong class="register-link" (click)="goToRegistration()">Registration</strong>

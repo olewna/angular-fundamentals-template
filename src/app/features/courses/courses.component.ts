@@ -3,6 +3,8 @@ import { Course } from "@app/shared/models/course.model";
 import { CoursesStoreService } from "../../services/courses-store.service";
 import { Router } from "@angular/router";
 import { UserStoreService } from "../../user/services/user-store.service";
+import { CoursesStateFacade } from "@app/store/courses/courses.facade";
+import { UserFacade } from "@app/store/user/user.facade";
 
 @Component({
   selector: "app-courses",
@@ -11,25 +13,29 @@ import { UserStoreService } from "../../user/services/user-store.service";
 })
 export class CoursesComponent implements OnInit {
   constructor(
-    private courseStoreService: CoursesStoreService,
-    private userStoreService: UserStoreService,
+    private courseFacade: CoursesStateFacade,
+    private userFacade: UserFacade,
     private router: Router
   ) {}
 
+  public isSearchingState = false;
+  protected courses$ = this.courseFacade.allCourses$;
+  protected filteredCourses$ = this.courseFacade.filteredCourses$;
+  protected isLoading$ = this.courseFacade.isAllCoursesLoading$;
+
   get isAdmin() {
-    return this.userStoreService.isAdmin;
+    return this.userFacade.isAdmin;
   }
 
   ngOnInit(): void {
-    this.courseStoreService.getAll();
-    this.courseStoreService.courses$.subscribe({
-      next: (res) => {
-        this.posts = res;
+    this.courseFacade.getAllCourses();
+
+    this.courseFacade.isSearchingState$.subscribe({
+      next: (value) => {
+        this.isSearchingState = value;
       },
     });
   }
-
-  public posts: Course[] = [];
 
   goToAddForm() {
     this.router.navigate(["courses", "add"]);

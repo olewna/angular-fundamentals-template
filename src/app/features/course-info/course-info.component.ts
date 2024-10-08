@@ -5,6 +5,8 @@ import { CoursesStoreService } from "@app/services/courses-store.service";
 import { Author } from "@app/shared/models/author.model";
 import { Course } from "@app/shared/models/course.model";
 import { parseDateDDMMYYYY } from "src/assets/parseDate";
+import { CoursesStateFacade } from "../../store/courses/courses.facade";
+import { map, Observable } from "rxjs";
 
 @Component({
   selector: "app-course-info",
@@ -15,38 +17,41 @@ export class CourseInfoComponent implements OnInit {
   public constructor(
     private route: ActivatedRoute,
     private coursesStoreService: CoursesStoreService,
+    private coursesFacade: CoursesStateFacade,
     private location: Location
   ) {}
 
   @Input() course: Course | null = null;
 
-  private id: string = "";
+  private id = "";
   private authors: Author[] = [];
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params["id"];
 
-    this.coursesStoreService.getCourse(this.id);
     this.coursesStoreService.authors$.subscribe({
       next: (authors) => {
         this.authors = authors;
       },
     });
-    this.coursesStoreService.courses$.subscribe({
-      next: (courses) => {
-        this.course = courses[0];
+
+    this.coursesFacade.course$.subscribe({
+      next: (course) => {
+        this.course = course;
       },
     });
+
+    this.coursesFacade.getSingleCourse(this.id);
   }
 
   get courseAuthors() {
     return this.course?.authors.map((authorId) => {
-      return this.authors.filter((x) => x.id === authorId)[0]?.name;
+      return this.authors.find((author) => author.id === authorId)?.name ?? "";
     });
   }
 
   get stringToDate(): Date {
-    return parseDateDDMMYYYY(this.course?.creationDate!);
+    return parseDateDDMMYYYY(this.course!.creationDate);
   }
 
   public goBack() {

@@ -22,22 +22,21 @@ export class AuthService {
   private baseUrl = environment.apiUrl;
 
   login(user: User) {
-    this.httpClient
-      .post<any>(`${this.baseUrl}/login`, user)
-      .pipe(
-        tap((response) => {
-          if (response && response.result) {
-            this.sessionStorageService.setToken(response.result.slice(7));
-          }
-        })
-      )
-      .subscribe({
-        next: (_res) => {
-          this.isAuthorized$$.next(true);
-          this.userStoreService.getUser();
-          this.router.navigate(["/courses"]);
-        },
-      });
+    return this.httpClient.post<any>(`${this.baseUrl}/login`, user);
+    //     .pipe(
+    //       tap((response) => {
+    //         if (response && response.result) {
+    //           this.sessionStorageService.setToken(response.result.slice(7));
+    //         }
+    //       })
+    //     )
+    //     .subscribe({
+    //       next: (_res) => {
+    //         this.isAuthorized$$.next(true);
+    //         this.userStoreService.getUser();
+    //         this.router.navigate(["/courses"]);
+    //       },
+    //     });
   }
 
   logout() {
@@ -45,31 +44,31 @@ export class AuthService {
       "Authorization",
       this.sessionStorageService.getToken() || ""
     );
-    this.httpClient
-      .delete<any>(`${this.baseUrl}/logout`, {
-        headers: httpHeaders,
-      })
-      .pipe(
-        tap((response) => {
-          if (response && response.status === 200) {
-            this.sessionStorageService.deleteToken();
-          }
-        })
-      )
-      .subscribe({
-        next: () => {
-          this.isAuthorized$$.next(false);
-          this.router.navigate(["/login"]);
-        },
-      });
+    return this.httpClient.delete<any>(`${this.baseUrl}/logout`, {
+      headers: httpHeaders,
+    });
+    // .pipe(
+    //   tap((response) => {
+    //     if (response && response.status === 200) {
+    //       this.sessionStorageService.deleteToken();
+    //     }
+    //   })
+    // )
+    // .subscribe({
+    //   next: () => {
+    //     this.isAuthorized$$.next(false);
+    //     this.router.navigate(["/login"]);
+    //   },
+    // });
   }
 
   register(user: User) {
-    this.httpClient.post<any>(`${this.baseUrl}/register`, user).subscribe({
-      next: () => {
-        this.router.navigate(["/login"]);
-      },
-    });
+    return this.httpClient.post<any>(`${this.baseUrl}/register`, user);
+    // .subscribe({
+    //   next: () => {
+    //     this.router.navigate(["/login"]);
+    //   },
+    // });
   }
 
   get isAuthorised() {

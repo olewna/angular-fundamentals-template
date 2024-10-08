@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CoursesStoreService } from "@app/services/courses-store.service";
 import { Author } from "@app/shared/models/author.model";
+import { CoursesStateFacade } from "@app/store/courses/courses.facade";
 import { FaIconLibrary } from "@fortawesome/angular-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 
@@ -19,13 +20,15 @@ export class CourseFormComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private coursesStoreService: CoursesStoreService,
-    private router: Router
+    private router: Router,
+    private coursesFacade: CoursesStateFacade
   ) {
     library.addIconPacks(fas);
   }
-  courseForm!: FormGroup;
-  protected submitted: boolean = false;
-  protected id: string = "";
+
+  protected courseForm!: FormGroup;
+  protected submitted = false;
+  protected id = "";
   private authors: Author[] = [];
 
   ngOnInit(): void {
@@ -57,19 +60,18 @@ export class CourseFormComponent implements OnInit {
     });
 
     if (this.id) {
-      this.coursesStoreService.getCourse(this.id);
-      this.coursesStoreService.courses$.subscribe({
-        next: (courses) => {
-          const currentCourse = courses[0];
+      this.coursesFacade.getSingleCourse(this.id);
+      this.coursesFacade.course$.subscribe({
+        next: (currentCourse) => {
           this.courseForm.patchValue({
-            title: currentCourse.title,
-            description: currentCourse.description,
-            duration: currentCourse.duration,
+            title: currentCourse!.title,
+            description: currentCourse!.description,
+            duration: currentCourse!.duration,
           });
 
           this.getCourseAuthors().clear();
 
-          const courseAuthors = currentCourse.authors.map((authorId) => {
+          const courseAuthors = currentCourse!.authors.map((authorId) => {
             return {
               name: this.authors.filter((x) => x.id === authorId)[0]?.name,
               id: authorId,
@@ -78,7 +80,7 @@ export class CourseFormComponent implements OnInit {
 
           this.authors = [
             ...this.authors.filter(
-              (x) => !currentCourse.authors.includes(x.id)
+              (x) => !currentCourse!.authors.includes(x.id)
             ),
           ];
 
@@ -153,14 +155,14 @@ export class CourseFormComponent implements OnInit {
       };
 
       if (this.id) {
-        this.coursesStoreService.editCourse(this.id, body);
+        this.coursesFacade.editCourse(body, this.id);
       } else {
-        this.coursesStoreService.createCourse(body);
+        this.coursesFacade.createCourse(body);
         this.courseForm.reset();
       }
 
-      alert(this.id ? "Updated" : "Course added"); //TODO
-      this.router.navigate(["courses"]);
+      // alert(this.id ? "Updated" : "Course added"); //TODO
+      // this.router.navigate(["courses"]);
     }
   }
 

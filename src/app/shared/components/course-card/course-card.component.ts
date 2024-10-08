@@ -4,6 +4,7 @@ import { Author } from "@app/shared/models/author.model";
 import { Course } from "@app/shared/models/course.model";
 import { UserStoreService } from "@app/user/services/user-store.service";
 import { parseDateDDMMYYYY } from "../../../../assets/parseDate";
+import { UserFacade } from "@app/store/user/user.facade";
 
 @Component({
   selector: "app-course-card",
@@ -11,16 +12,13 @@ import { parseDateDDMMYYYY } from "../../../../assets/parseDate";
   styleUrls: ["./course-card.component.scss"],
 })
 export class CourseCardComponent {
-  public constructor(
-    private userStoreService: UserStoreService,
-    private router: Router
-  ) {}
-  @Input() course: Course | null = null;
+  public constructor(private userFacade: UserFacade, private router: Router) {}
+  @Input() course: Course | undefined;
   @Input() editable: boolean = false;
   @Input() authors: Author[] = [];
 
   get isAdmin() {
-    return this.userStoreService.isAdmin;
+    return this.userFacade.isAdmin;
   }
 
   get courseAuthors() {
